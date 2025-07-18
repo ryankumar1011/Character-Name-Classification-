@@ -30,5 +30,11 @@ print("Accuracy:", accuracy)
 
 print("classification report:", classification_report(y_test, y_pred))
 
-print("Prediction:", classifier.predict(vectorizer.transform(["Don't joke around! I can and will do anything!"])))
-
+while True:
+      user_input = input("\nEnter text: ")
+      
+      if user_input.lower().strip() in ['quit', 'exit', 'q']:
+          break
+      
+      print("Prediction:", classifier.predict(vectorizer.transform([user_input])))
+      
