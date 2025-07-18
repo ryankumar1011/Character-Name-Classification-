@@ -31,9 +31,8 @@ def load_model(model_path='./bert_dialogue_classifier'):
 
 def predict_text(text, model, tokenizer, id_to_label, device, max_length=128):
 
-    print("Input text:", text)
-
     # Tokenize the input
+    # add_special_tokens=True
     encoding = tokenizer(
         text,
         truncation=True,

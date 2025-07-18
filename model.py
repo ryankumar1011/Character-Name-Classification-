@@ -35,7 +35,7 @@ class DialogueDataset(Dataset):
         text = str(self.texts[idx])  # Keep original text with spaces
         label = self.labels[idx]
         
-        # Tokenize the text - BERT handles spaces properly
+        # Tokenize the text 
         encoding = self.tokenizer(
             text,
             truncation=True,
@@ -53,13 +53,6 @@ class DialogueDataset(Dataset):
 def load_and_preprocess_data(file_path):
 
     df = pd.read_csv(file_path)
-    
-    # Only strip labels for consistency, preserve text exactly as-is
-    df['Label'] = df['Label'].str.strip() if df['Label'].dtype == 'object' else df['Label']
-    
-    # Remove truly empty rows (but preserve text formatting)
-    df = df.dropna()
-    df = df[df['Text'].astype(str).str.strip() != '']  # Check if empty, but don't modify
     
     # Create label mapping
     unique_labels = df['Label'].unique()
@@ -83,7 +76,7 @@ def create_data_loaders(df, tokenizer, batch_size=16, max_length=128):
         df['label_id'].tolist(),
         test_size=0.2,
         random_state=42,
-        stratify=df['label_id']
+        stratify=df['label_id'] # equal distribution of classes in split 
     )
     
     # Create datasets
@@ -145,7 +138,7 @@ def train_epoch(model, train_loader, optimizer, scheduler, device):
     return total_loss / len(train_loader), correct_predictions / total_samples
 
 def evaluate(model, val_loader, device):
-    """Evaluate the model"""
+
     model.eval()
     total_loss = 0
     correct_predictions = 0
@@ -273,31 +266,3 @@ def main():
         }, f)
 
     return model, tokenizer, label_to_id, id_to_label
-
-"""
-def predict_character(text, model, tokenizer, id_to_label, max_length=128):
-
-    model.eval()
-    
-    # Tokenize
-    encoding = tokenizer(
-        text,
-        truncation=True,
-        padding='max_length',
-        max_length=max_length,
-        return_tensors='pt'
-    )
-    
-    # Move to device
-    input_ids = encoding['input_ids'].to(device)
-    attention_mask = encoding['attention_mask'].to(device)
-    
-    # Predict
-    with torch.no_grad():
-        outputs = model(input_ids=input_ids, attention_mask=attention_mask)
-        predictions = torch.nn.functional.softmax(outputs.logits, dim=-1)
-        predicted_class = torch.argmax(predictions, dim=-1).item()
-        confidence = predictions[0][predicted_class].item()
-    
-    return id_to_label[predicted_class], confidence
-"""
