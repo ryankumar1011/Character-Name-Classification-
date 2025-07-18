@@ -2,6 +2,14 @@
 
 This project involved a NLP taks to classify character names based on dialogue lines from an online novel. A BERT model is fine-tuned for this purpose. 
 
+## References
+For fine tuning BERT: https://www.kaggle.com/code/neerajmohan/fine-tuning-bert-for-text-classification/comments
+
+Using Hugging Face Transform Library: https://huggingface.co/learn/llm-course/chapter1/1
+
+Parsing HTML with BeautifulSoup: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+
+
 ## Project Structure
 
 ### `data_extraction.py`
